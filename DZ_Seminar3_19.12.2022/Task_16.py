@@ -20,7 +20,7 @@ if x < 1 or x > n/2:
 array = []
 
 for item in range(0, n):
-    array.append(round(random.randint(1, int(n/2))))
+    array.append(round(random.randint(1, n//2)))
 print(array)
 
 count = 0
