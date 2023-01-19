@@ -8,7 +8,7 @@
 fileName = 'Phonebook.txt'
 
 def pause():
-    input('Чтобы вернуться в меню, нажмите Enter \n')
+    input('Для продолжения нажмите Enter ')
 
 
 def show_all(file_name):
@@ -27,14 +27,17 @@ def read_file_into_strings(file_name):
 
 
 def find_user():
-    name = input('Введите любую часть имени, отчества или фамилии: ')
+    name = input('Введите Фамилию, Имя или Отчество (с большой буквы): ')
     print()
+    string_return = ''
     user_list = read_file_into_strings(fileName)
     for user in user_list:
         if name in user:
             print(user)
+            string_return = user
     print()
     pause()
+    return string_return
 
 
 def find_number():
@@ -46,31 +49,35 @@ def find_number():
             print(user)
     print()
     pause()
-    return user
+    return number
 
 
 def add_new_contact(file_name):
     with open(file_name, 'a', encoding='utf8') as data:
-        data.writelines(input('Введите через запятую Фамилию, Имя, Отчество, Номер телефона: ') + '\n')
+        data.write('\n')
+        data.writelines(input('Введите через пробел Фамилию, Имя, Отчество, Номер телефона: '))
 
 
-def correct_number():
-    user = find_number().split()
-    user[3] = input('Введите новый номер телефона в формате +79001234567: ')
+def correct_number(file_name):
+    old_number = find_number()
+    new_number = input('Введите новый номер телефона в формате +79001234567: ')
+    with open(file_name, 'r', encoding='utf8') as data:
+        new_data = data.read().replace(old_number, new_number)
+    with open(file_name, 'w', encoding='utf8') as data:
+        data.write(new_data)
+    print()
     pause()
 
 
-def read_file_into_words(file_name):
-    result = []
+def delete_user(file_name):
+    user = find_user()
     with open(file_name, 'r', encoding='utf8') as data:
-        for line in data:
-            result.append(line.split(''))
-    return result
+        new_data = data.read().replace(user, '').strip('\n')
+    with open(file_name, 'w', encoding='utf8') as data:
+        data.write(new_data)
+    print()
+    pause()
 
-# add_new_contact(fileName)
-# print(type(read_file(fileName)))
-# print(read_file(fileName))
-# find_user(read_file(fileName))
 
 while True:
     print('''Меню:
@@ -95,8 +102,8 @@ while True:
         case 4:
             add_new_contact(fileName)
         case 5:
-            pass
+            delete_user(fileName)
         case 6:
-            correct_number()
+            correct_number(fileName)
         case 7:
             break
